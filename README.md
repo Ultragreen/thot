@@ -1,6 +1,6 @@
 # Thot
 
-Thot is THe Outset Templating : the simpliest solution for Ruby and command to templatize
+Thot is THe Operative Templating : the simpliest solution for Ruby and command to templatize
 
 ## Installation
 

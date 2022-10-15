@@ -5,7 +5,7 @@ Gem::Specification.new do |spec|
   spec.authors       = ["Romain GEORGES"]
   spec.email         = ["gems@ultragreen.net"]
 
-  spec.summary       = "THe Outset Templating "
+  spec.summary       = "THe Operative Templating "
   spec.description   = "the simpliest way to template in Ruby and command"
   spec.homepage      = "https://github.com/Ultragreen/thot"
   spec.license       = "MIT"
