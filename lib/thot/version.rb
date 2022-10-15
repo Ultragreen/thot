@@ -1,4 +1,4 @@
 require 'version'
-module Template
+module Thot
   VERSION = Version.current
 end

@@ -1,6 +1,6 @@
-require "template/version"
+require "thot/version"
 
-module Template
+module Thot
   class Error < StandardError; end
   # Your code goes here...
 end
