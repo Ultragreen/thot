@@ -19,7 +19,7 @@ module Thot
     # constructor : generate the pseudo accessor for template Class from token list
     def initialize(template_file: , list_token: , strict: true)
       
-      
+      @result = ""
       @template_file = template_file
       raise NoTemplateFile::new('No template file found') unless File::exist?(@template_file)
       begin
@@ -39,8 +39,13 @@ module Thot
       else
         raise InvalidTokenList::new("Token list doesn't match the template") unless (token_from_template.sort & @list_token.sort) == token_from_template.sort
       end
-      @list_token.each{|_token| eval("def #{_token}=(_value); raise ArgumentError::new('Not a String') unless _value.class == String; @hash_token['#{_token}'] = _value ;end")}
-      @list_token.each{|_token| eval("def #{_token}; @hash_token['#{_token}'] ;end")}
+      @list_token.each do |_token|
+        self.instance_eval do
+          define_singleton_method(:"#{_token}=") {|_value| raise ArgumentError::new('Not a String') unless _value.class == String; @hash_token[__callee__.to_s.chomp('=')] = _value }
+          define_singleton_method(_token.to_sym) { return @hash_token[__callee__.to_s]  }
+        end
+      end
+      
     end
     
     # generic accessor
@@ -73,13 +78,30 @@ module Thot
     # the templater;proceed to templating
     # @return [String] the template output
     def output
-      _my_res = String::new('')
-      _my_res = @content
+      @result = @content
       @list_token.each{|_token|
-        _my_res.gsub!(/%%#{_token.to_s.upcase}%%/,@hash_token[_token.to_s])
+        self.filtering  @content.scan(/%%(#{_token.to_s.upcase}[\.\w+]+)%%/).flatten
+        @result.gsub!(/%%#{_token.to_s.upcase}%%/,@hash_token[_token.to_s])
       }
-      return _my_res
+      return @result
     end
+
+    private
+
+    def filtering(list)
+      @filtered_tokens = {}
+      list.each do |pipe|
+        token, *filters = pipe.split('.')
+        @filtered_tokens[pipe] = @hash_token[token.downcase]
+        filters.each do |filter|
+          @filtered_tokens[pipe] = @filtered_tokens[pipe].send filter.to_sym if @filtered_tokens[pipe].respond_to? filter.to_sym
+        end
+      end
+      @filtered_tokens.each do |item,value|
+        @result.gsub!(/%%#{item}%%/,value)
+      end
+    end
+    
     
   end
   
@@ -91,3 +113,6 @@ module Thot
   class NoTemplateFile < Exception; end
   
 end
+
+
+    

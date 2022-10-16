@@ -9,8 +9,8 @@ include Thot
 RSpec.describe Template do
   $template_file = "/tmp/template.txt"
   $nonexistantfile = "/tmp/nonexistant.txt"
-  $template = "Hello %%NAME%% !!"
-  $result = "Hello Romain !!"
+  $template = "Hello %%NAME%% %%NAME.upcase%% %%NAME.reverse.downcase%% !!"
+  $result = "Hello Romain ROMAIN niamor !!"
   $goodtoken = :name
   $badtoken = :surname
   $value = 'Romain'
@@ -74,7 +74,7 @@ RSpec.describe Template do
   end
   context "Template <execution> with token '#{$goodtoken}' and '#{$badtoken}', content = '#{$content}', and ##{$badtoken} usage with strict = false" do
     before :all do
-      $test = Template::new(list_token: [$goodtoken] , template_file: $template_file, strict: false)
+      $test = Template::new(list_token: [$goodtoken,$badtoken] , template_file: $template_file, strict: false)
     end
     specify { expect($test).to respond_to $badtoken.to_sym }
     specify { expect($test).to respond_to $goodtoken.to_sym }
