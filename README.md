@@ -23,12 +23,12 @@ Or install it yourself as:
 
 Thot is a simple templating tool, with :
 - a template including token, like : %%TOKEN_NAME%% => Token MUST be in uppercase
-- a hash of data (symbols as keys) corresponding, like : {token_name: 'value'}  
+- a hash of data (symbols as keys) corresponding, like : <pre>{token_name: 'value'}</pre>  
 It could generate an output.
 
 ### Usecase
 
-- with data :  {name: 'Romain'}
+- with data :  <pre>{name: 'Romain'}</pre>
 - and template content : "Hello %%NAME%% !"
 
 Thot simply generate :
@@ -36,7 +36,7 @@ Thot simply generate :
 
 ### Advanced usecase 
 
-- with data :  {firstname: 'romain', name: 'georges', nickname: 'zaidyur'}
+- with data :  <pre>{firstname: 'romain', name: 'georges', nickname: 'zaidyur'}</pre>
 - and template content : "Hello %%FIRSTNAME.capitalize%% %%NAME.upcase%%  your nickname is : %%NICKNAME.reverse.capitalize%% !"
 
 Thot generate :
@@ -88,7 +88,8 @@ return
 ````
 
 return
-   Hello Romain !!
+
+    Hello Romain !!
 
 #### Strict mode false with map input and template_content
 
@@ -101,6 +102,7 @@ return
 ````
 
 return
+
    Hello Romain !!
 
 

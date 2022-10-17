@@ -21,8 +21,8 @@ RSpec.describe Template do
   subject { Template }
   specify { should be_an_instance_of Class }
   context "Exception case" do
-    it "should raise NoTemplateFile if template file not exist" do
-      expect { Template::new(list_token: [$goodtoken] , template_file: $nonexistantfile) }.to raise_error NoTemplateFile
+    it "should raise NoTemplateFile if no file or content given" do
+      expect { Template::new(list_token: [$goodtoken] ) }.to raise_error NoTemplateFile
     end
     it "should raise NotAToken if try to send ##{$badtoken} and '#{$badtoken}' not a valid token" do
       expect { Template::new(list_token: [$goodtoken], template_file: $template_file).send($badtoken.to_sym)}.to raise_error NotAToken
@@ -32,6 +32,9 @@ RSpec.describe Template do
     end
     it "should not raise InvalidTokenList if initialized with ['#{$goodtoken}','#{$badtoken}'] tokens list and strict: false" do
       expect { Template::new(strict: false, list_token: [$goodtoken,$badtoken] , template_file: $template_file)}.not_to raise_error InvalidTokenList
+    end
+        it "should not raise if initialized with template_content and a valid list_token for respective strict mode" do
+      expect { Template::new(strict: false, list_token: [$goodtoken,$badtoken] , template_content: $template)}.not_to raise_error NoTemplateFile
     end
     it "should raise NoTemplateFile if template file not exist AND initialized with ['#{$goodtoken}','#{$badtoken}'] tokens list" do
       expect { Template::new(list_token: [$goodtoken,$badtoken] , template_file: $nonexistantfile)}.to raise_error NoTemplateFile
