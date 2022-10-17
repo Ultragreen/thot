@@ -55,6 +55,55 @@ Note : Your could monkey patch String or use Refinment for implementing our own 
 
 Thot is already a library for you usage and a CLI. 
 
+###  Ruby Library usage
+
+you could use Thot in your Ruby code :
+
+#### Strict mode and accessor input
+
+Note : Considering 'template.txt' with : 'Hello %%NAME !!'
+Note : in strict mode if the Tokens in template file don't match exactly the given token list, Thot raise an exception.  
+
+```ruby
+   require 'thot'
+   include Thot
+   template = Template::new list_token: [:name] , template_file: './template.txt'
+   template.name = 'Romain'
+   puts template.output
+````
+
+return
+
+   Hello Romain !!
+
+
+#### Strict mode false with accesor input and template_content
+
+```ruby
+   require 'thot'
+   include Thot
+   template = Template::new list_token: [:name, :surname] , template_content: 'Hello %%NAME !!'
+   template.name = 'Romain'
+   puts template.output
+````
+
+return
+   Hello Romain !!
+
+#### Strict mode false with map input and template_content
+
+```ruby
+   require 'thot'
+   include Thot
+   template = Template::new list_token: [:name, :surname] , template_content: 'Hello %%NAME !!'
+   template.map {name: 'Romain', surname: 'Georges' }
+   puts template.output
+````
+
+return
+   Hello Romain !!
+
+
 
 ###   CLI usage
 
