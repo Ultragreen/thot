@@ -70,31 +70,44 @@ Note : CLI work only strict mode false, you could have unused keys in datas.
 
 * a file 'template.txt' with : "Hello %%NAME%% !!"
 * a variables file with lines, like :
+```
     key=value
     key = value
       key = value
     # comments and other lines are ignored
-  sample, env.test: 
+```
 
+sample, env.test: 
+
+```
     name=Romain
+```
 
 In the same path
 
 #### STDIN from echo
 
+```
     $ echo "Hello %%NAME%% !!" |thot -e env.test
+```
 
 #### STDIN from input
 
+```
     $ thot -e env.test < template.txt
+```
 
 #### Files list 
 
+```
     $ thot -e env.test template1.txt template2.txt
+```
 
 #### Typical usage
 
+```
     $ thot -e env.test < template.txt > output.txt
+```
 
 ###
 
