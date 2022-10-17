@@ -17,16 +17,24 @@ module Thot
     attr_reader :content
     
     # constructor : generate the pseudo accessor for template Class from token list
-    def initialize(template_file: , list_token: , strict: true)
+    def initialize(template_file: nil, list_token: , strict: true, template_content: nil)
       
       @result = ""
-      @template_file = template_file
-      raise NoTemplateFile::new('No template file found') unless File::exist?(@template_file)
-      begin
-        @content = IO::readlines(@template_file).join.chomp
-      rescue
-        raise NoTemplateFile::new('No template file found')
+      if template_file
+        @template_file = template_file
+        raise NoTemplateFile::new('No template file found') unless File::exist?(@template_file)
+        begin
+          @content = IO::readlines(@template_file).join.chomp
+        rescue
+          raise NoTemplateFile::new('Template file read error')
+        end
+      elsif template_content
+        @content =  template_content
+      else
+        raise NoTemplateFile::new('No template file found or template content')
       end
+        
+      
       token_from_template = @content.scan(/%%(\w+)%%/).flatten.uniq.map{ |item| item.downcase.to_sym}
       begin
         @list_token = list_token

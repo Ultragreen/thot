@@ -18,9 +18,86 @@ Or install it yourself as:
 
     $ gem install thot
 
+
+## Principe
+
+Thot is a simple templating tool, with :
+- a template including token, like : %%TOKEN_NAME%% => Token MUST be in uppercase
+- a hash of data (symbols as keys) corresponding, like : {token_name: 'value'}  
+It could generate an output.
+
+### Usecase
+
+- with data :  {name: 'Romain'}
+- and template content : "Hello %%NAME%% !"
+
+Thot simply generate :
+   'Hello Romain !'
+
+### Advanced usecase 
+
+- with data :  {firstname: 'romain', name: 'georges', nickname: 'zaidyur'}
+- and template content : "Hello %%FIRSTNAME.capitalize%% %%NAME.upcase%%  your nickname is : %%NICKNAME.reverse.capitalize%% !"
+
+Thot generate :
+   "Hello Romain GEORGES your nickname is : Ruydiaz !"
+
+
+Thot actually supports String to String piped filters :
+- filters must be stacked seperated by '.'
+- filters must be in lowercase
+- filters must be String instance methods returning a String (Modifier)
+
+Note : Your could monkey patch String or use Refinment for implementing our own filters.  
+
+
 ## Usage
 
-TODO: Write usage instructions here
+Thot is already a library for you usage and a CLI. 
+
+
+###   CLI usage
+
+Thot come with a CLI for templating :
+- reading from STDIN or list files arguments
+- getting values from variables file by argument [MANDATORY]  --env-var-file FILENAME
+- display output on STDOUT
+- verbose mode on STDERR if -v options.
+
+Note : CLI work only strict mode false, you could have unused keys in datas. 
+
+#### Pre-requisites
+
+* a file 'template.txt' with : "Hello %%NAME%% !!"
+* a variables file with lines, like :
+    key=value
+    key = value
+      key = value
+    # comments and other lines are ignored
+  sample, env.test: 
+
+    name=Romain
+
+In the same path
+
+#### STDIN from echo
+
+    $ echo "Hello %%NAME%% !!" |thot -e env.test
+
+#### STDIN from input
+
+    $ thot -e env.test < template.txt
+
+#### Files list 
+
+    $ thot -e env.test template1.txt template2.txt
+
+#### Typical usage
+
+    $ thot -e env.test < template.txt > output.txt
+
+###
+
 
 ## Development
 

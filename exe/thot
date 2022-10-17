@@ -1,0 +1,33 @@
+#!/usr/bin/env ruby
+
+
+require 'optparse'
+require 'thot'
+require 'thot/cli'
+
+options = {}
+OptionParser.new do |opts|
+  opts.banner = "Usage: example.rb [options]"
+  opts.on("-v", "--[no-]verbose", "Run verbosely") do |v|
+    options[:verbose] = v
+  end
+  opts.on("-eFILENAME", "--env-var-file=FILENAME", "[MANDATORY] Environment variables file (key=value pairs by line)") do |file|
+    options[:env_var_file] = file
+  end
+end.parse!
+
+list_input = ARGV.dup
+ARGV.clear
+
+
+include Thot
+
+cli = CLI::new options: options,  list_templates_file: list_input
+cli.generate
+
+
+
+
+
+
+
