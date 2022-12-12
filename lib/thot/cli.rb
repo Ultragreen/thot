@@ -28,6 +28,7 @@ module Thot
      end
 
      def getting_content
+        @content = ""
        if @list_templates_file.empty?
          STDERR.puts "Reading content from STDIN" if @options[:verbose]
          @content = ARGF.readlines.join
@@ -35,7 +36,7 @@ module Thot
          STDERR.puts "Reading content from file(s) : #{@list_templates_file}" if @options[:verbose]
          @list_templates_file.each do |item|
            if File::exist? item
-             @content.concat(File::readlines(item)).join
+             @content.concat(File::readlines(item).join)
            else
              raise "file not found #{item}"
            end

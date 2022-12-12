@@ -73,7 +73,6 @@ module Thot
         raise ArgumentError::new("#{item} : Not a String") unless val.class == String
         _data[item.to_s.downcase] = val
       }
-      raise InvalidTokenList::new("Token list malformation") unless _data.keys.sort == @list_token.map{|_token| _token.to_s }.sort
       @hash_token = _data
     end
     
@@ -89,7 +88,7 @@ module Thot
       @result = @content
       @list_token.each{|_token|
         self.filtering  @content.scan(/%%(#{_token.to_s.upcase}[\.\w+]+)%%/).flatten
-        @result.gsub!(/%%#{_token.to_s.upcase}%%/,@hash_token[_token.to_s])
+        @result.gsub!(/%%#{_token.to_s.upcase}%%/,@hash_token[_token.to_s]) if @hash_token.include? _token.to_s
       }
       return @result
     end
