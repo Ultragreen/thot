@@ -42,14 +42,14 @@ Or install it yourself as:
 ## Principe
 
 Thot is a simple templating tool, with :
-- a template including token, like : %%TOKEN_NAME%% => Token MUST be in uppercase
+- a template including token, like : **%%TOKEN_NAME%%** => Token MUST be in uppercase
 - a hash of data (symbols as keys) corresponding, like : <pre>{token_name: 'value'}</pre>  
 It could generate an output.
 
 ### Usecase
 
 - with data :  <pre>{name: 'Romain'}</pre>
-- and template content : "Hello %%NAME%% !"
+- and template content : "Hello **%%NAME%%** !"
 
 Thot simply generate :
    'Hello Romain !'
@@ -57,7 +57,7 @@ Thot simply generate :
 ### Advanced usecase 
 
 - with data :  <pre>{firstname: 'romain', name: 'georges', nickname: 'zaidyur'}</pre>
-- and template content : "Hello %%FIRSTNAME.capitalize%% %%NAME.upcase%%  your nickname is : %%NICKNAME.reverse.capitalize%% !"
+- and template content : "Hello **%%FIRSTNAME.capitalize%%** **%%NAME.upcase%%**  your nickname is : **%%NICKNAME.reverse.capitalize%%** !"
 
 Thot generate :
    "Hello Romain GEORGES your nickname is : Ruydiaz !"
@@ -81,7 +81,7 @@ you could use Thot in your Ruby code :
 
 #### Strict mode and accessor input
 
-Note : Considering 'template.txt' with : 'Hello %%NAME !!'
+Note : Considering 'template.txt' with : 'Hello **%%NAME%%** !!'
 Note : in strict mode if the Tokens in template file don't match exactly the given token list, Thot raise an exception.  
 
 ```ruby
@@ -102,7 +102,7 @@ return
 ```ruby
    require 'thot'
    include Thot
-   template = Template::new list_token: [:name, :surname] , template_content: 'Hello %%NAME !!'
+   template = Template::new list_token: [:name, :surname] , template_content: 'Hello %%NAM%% !!'
    template.name = 'Romain'
    puts template.output
 ````
@@ -116,7 +116,7 @@ return
 ```ruby
    require 'thot'
    include Thot
-   template = Template::new list_token: [:name, :surname] , template_content: 'Hello %%NAME !!'
+   template = Template::new list_token: [:name, :surname] , template_content: 'Hello %%NAME%% !!'
    template.map {name: 'Romain', surname: 'Georges' }
    puts template.output
 ````
@@ -139,7 +139,7 @@ Note : CLI work only strict mode false, you could have unused keys in datas.
 
 #### Pre-requisites
 
-* a file 'template.txt' with : "Hello %%NAME%% !!"
+* a file 'template.txt' with : "Hello **%%NAME%%** !!"
 * a variables file with lines, like :
 ```
     key=value
