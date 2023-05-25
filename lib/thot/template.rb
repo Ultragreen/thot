@@ -34,8 +34,11 @@ module Thot
           raise NoTemplateFile::new('No template file found or template content')
         end
           
-        
-        token_from_template = @content.scan(/%%(\w+)%%/).flatten.uniq.map{ |item| item.downcase.to_sym}
+        @tokenizer = Tokenizer::new string: @content ; @tokenizer.detect
+        token_from_template = @tokenizer.tokens
+       
+
+       
         begin
           @list_token = list_token
           @hash_token = Hash::new; @list_token.each{|_item| @hash_token[_item.to_s] = String::new('')}
@@ -44,8 +47,6 @@ module Thot
         end
         if strict
           raise InvalidTokenList::new("Token list doesn't match the template") unless token_from_template.sort == @list_token.sort
-        else
-          raise InvalidTokenList::new("Token list doesn't match the template") unless (token_from_template.sort & @list_token.sort) == token_from_template.sort
         end
         if @myput then
           if @myput.level == :debug then 
@@ -90,14 +91,15 @@ module Thot
         raise NotAToken
       end
       
-      # the templater;proceed to templating
+      # the templater himself : proceed to templating
       # @return [String] the template output
       def output
         @result = @content
-        @list_token.each{|_token|
-          self.filtering  @content.scan(/%%(#{_token.to_s.upcase}[\.\w+]+)%%/).flatten
-          @result.gsub!(/%%#{_token.to_s.upcase}%%/,@hash_token[_token.to_s]) if @hash_token.include? _token.to_s
-        }
+
+        @tokenizer.definitions.each do |item, rule|
+          @result.gsub!(item, Thot::Processor::new(value:  @hash_token[rule[:key].downcase], rule: rule).result)
+        end
+
         if @myput then
           if @myput.level == :debug then 
             @myput.debug "Output :"
@@ -108,23 +110,6 @@ module Thot
         end
         return @result
       end
-  
-      private
-  
-      def filtering(list)
-        @filtered_tokens = {}
-        list.each do |pipe|
-          token, *filters = pipe.split('.')
-          @filtered_tokens[pipe] = @hash_token[token.downcase]
-          filters.each do |filter|
-            @filtered_tokens[pipe] = @filtered_tokens[pipe].send filter.to_sym if @filtered_tokens[pipe].respond_to? filter.to_sym
-          end
-        end
-        @filtered_tokens.each do |item,value|
-          @result.gsub!(/%%#{item}%%/,value)
-        end
-      end
-      
       
     end
     

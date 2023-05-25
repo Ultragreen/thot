@@ -1,2 +1,21 @@
-Hello %%NAME.capitalize%% %%SURNAME.upcase%% !! 
-Welcome ! 
+With %
+filters alone : %%NAME.capitalize%% %%SURNAME.upcase%%
+stacked filters alone : %%SURNAME.upcase.reverse%%
+no tokens
+empty with default value : %%TOTO(default value)%%
+only defined token : %%NAME%%
+empty with filters with default value : %%TOTO.downcase(default value static)%%
+empty : %%TOTO%%
+defined stacked filters with default value : %%SURNAME.upcase.reverse(default)%%
+empty stacked filters with default value : %%TOTO.upcase.reverse(default)%%
+
+with {
+filters alone: {{NAME.capitalize}} {{SURNAME.upcase}}
+stacked filters alone : {{SURNAME.upcase.reverse}}
+no tokens 
+empty with default value : {{TOTO(default value)}}
+only defined token : {{NAME}}
+empty with filters with default value : {{TOTO.downcase(default value static)}}
+empty : {{TOTO}}
+defined stacked filters with default value : {{SURNAME.upcase.reverse(default)}}
+empty stacked filters with default value : {{TOTO.upcase.reverse(default)}}
