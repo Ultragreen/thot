@@ -7,6 +7,7 @@ module Thot
     inject service: :output
 
     def initialize(options: , template_file: nil )
+
       @options = options
       output.level = (@options[:debug])? :debug : :info
       output.debug "Debugging mode activated" if @options[:debug]
@@ -14,7 +15,6 @@ module Thot
       output.info "Assuming Environment : #{@options[:environment]}" if @options[:verbose]
       getting_data
       getting_content
-      
     end
 
 
@@ -39,14 +39,15 @@ module Thot
      def getting_content
         @content = ""
        if @template_file.nil?
-        output.info "Reading content from STDIN" if @options[:verbose]
+        output.info "Reading content from STDIN (CTRL+D to commit)" if STDIN.tty?
+        output.info "Getting content from STDIN" if @options[:verbose] and not STDIN.tty?
          @content = ARGF.readlines.join
        else
         output.info "Reading content from file : #{@template_file}" if @options[:verbose]
         if File::exist? @template_file
          @content = File::readlines(@template_file).join
         else
-         raise "file not found #{item}"
+         raise "file not found #{@template_file}"
         end
        end
      end

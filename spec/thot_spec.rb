@@ -98,7 +98,7 @@ RSpec.describe Varfiles do
   before :all do
     $varfile  = "./samples/.env.prod"
     $dotfile = "./samples/.thot.env" 
-    $result = {"name"=>"romain", "surname"=>"georges", "var1"=>"local", "var2"=>"global"}
+    $result = {:name=>"romain", :surname=>"georges", :var1=>"local", :var2 =>"global"}
   end
   context "Structure" do
     subject { Varfiles }

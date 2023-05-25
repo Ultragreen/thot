@@ -12,10 +12,13 @@ module Thot
       attr_reader :template_file
       # getter of the flat content of the template
       attr_reader :content
+
+  
+   
       
       # constructor : generate the pseudo accessor for template Class from token list
       def initialize(template_file: nil, list_token: , strict: true, template_content: nil)
-        
+        @myput  = Carioca::Registry::init.get_service name: :output if defined?(Carioca::Injector)
         @result = ""
         if template_file
           @template_file = template_file
@@ -43,6 +46,14 @@ module Thot
           raise InvalidTokenList::new("Token list doesn't match the template") unless token_from_template.sort == @list_token.sort
         else
           raise InvalidTokenList::new("Token list doesn't match the template") unless (token_from_template.sort & @list_token.sort) == token_from_template.sort
+        end
+        if @myput then
+          if @myput.level == :debug then 
+            @myput.debug "Template :"
+              @content.split("\n").each  do |line|
+                @myput.debug "  #{line}"
+              end
+          end
         end
         @list_token.each do |_token|
           self.instance_eval do
@@ -87,6 +98,14 @@ module Thot
           self.filtering  @content.scan(/%%(#{_token.to_s.upcase}[\.\w+]+)%%/).flatten
           @result.gsub!(/%%#{_token.to_s.upcase}%%/,@hash_token[_token.to_s]) if @hash_token.include? _token.to_s
         }
+        if @myput then
+          if @myput.level == :debug then 
+            @myput.debug "Output :"
+              @result.split("\n").each  do |line|
+                @myput.debug "  #{line}"
+              end
+          end
+        end
         return @result
       end
   

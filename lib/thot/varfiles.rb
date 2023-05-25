@@ -13,12 +13,13 @@ module Thot
             scanned_files.each do |file|
                 real_file = File.expand_path(file)
                 if File::exists? real_file then
-                    output.info "Negociated files : #{real_file}, merging..." if self.respond_to?(:output)
+                    output.debug "Negociated files : #{real_file}, merging..." if self.respond_to?(:output)
                     datafile = IniFile.load(real_file)
                     @data.merge! datafile["global"]
                     @data.merge! datafile[environment] if datafile.sections.include? environment.to_s
                 end
             end
+            @data.transform_keys!(&:to_sym)
             if self.respond_to?(:output) then
                 if output.level == :debug then 
                     output.debug "merged data:"
