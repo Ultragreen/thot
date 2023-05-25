@@ -46,7 +46,9 @@ Thot is a simple templating tool, with :
 - a hash of data (symbols as keys) corresponding, like : <pre>{token_name: 'value'}</pre>  
 It could generate an output.
 
-### Usecase
+From versions upper than 1.2.0, Thot support token syntax like **{{TOKEN_NAME}}**
+
+### Simple usecase
 
 - with data :  <pre>{name: 'Romain'}</pre>
 - and template content : "Hello **%%NAME%%** !"
@@ -62,18 +64,45 @@ Thot simply generate :
 Thot generate :
    "Hello Romain GEORGES your nickname is : Ruydiaz !"
 
+This usecase use filters, see it in the following chapter. 
+**Note** : Your could monkey patch String or use Refinment for implementing our own filters.  
 
-Thot actually supports String to String piped filters :
-- filters must be stacked seperated by '.'
-- filters must be in lowercase
-- filters must be String instance methods returning a String (Modifier)
 
-Note : Your could monkey patch String or use Refinment for implementing our own filters.  
+### Thot templating Language (TTL) reference
+
+- Token cloud be construct with {{TOKEN}} or %%TOKEN%%.
+- Token must include filtering methods : Thot actually supports String to String piped filters
+  - Filters don't support parameters
+  - Filters must be stacked seperated by '.'
+  - Filters must be in lowercase
+  - Filters must be String instance methods returning a String (Modifier)
+- Token should have default value
+- Default values don't support multiline correctly.
+
+This is some examples of correct TTL syntaxes : 
+
+With %%TOKEN%% : 
+- filters alone : %%NAME.capitalize%% 
+- stacked filters alone : %%SURNAME.upcase.reverse%%
+- token only with default value : %%TOTO(default value)%%
+- token only : %%NAME%% 
+- with filters with default value : %%TOTO.downcase(default value static)%%
+- stacked filters with default value : %%SURNAME.upcase.reverse(default)%%
+
+
+with {{TOKEN}} :
+- filters alone: {{NAME.capitalize}} 
+- stacked filters alone : {{SURNAME.upcase.reverse}}
+- token only with default value : {{TOTO(default value)}}
+- token only : {{NAME}}
+- with filters with default value : {{TOTO.downcase(default value static)}}
+- stacked filters with default value : {{SURNAME.upcase.reverse(default)}}
+
 
 
 ## Usage
 
-Thot is already a library for you usage and a CLI. 
+Thot is a library for you usage AND a CLI tool. 
 
 ###  Ruby Library usage
 
@@ -90,7 +119,7 @@ Note : in strict mode if the Tokens in template file don't match exactly the giv
    template = Template::new list_token: [:name] , template_file: './template.txt'
    template.name = 'Romain'
    puts template.output
-````
+```
 
 return
 
@@ -105,7 +134,7 @@ return
    template = Template::new list_token: [:name, :surname] , template_content: 'Hello %%NAM%% !!'
    template.name = 'Romain'
    puts template.output
-````
+```
 
 return
 
@@ -119,7 +148,7 @@ return
    template = Template::new list_token: [:name, :surname] , template_content: 'Hello %%NAME%% !!'
    template.map {name: 'Romain', surname: 'Georges' }
    puts template.output
-````
+```
 
 return
 
@@ -129,13 +158,27 @@ return
 
 ###   CLI usage
 
-Thot come with a CLI for templating :
+Thot come with a CLI for templating, you could :
 - reading from STDIN or list files arguments
-- getting values from variables file by argument [MANDATORY]  --env-var-file FILENAME
+- getting values from variables file by argument   --env-var-file, -f FILENAME or from Thot Varfile, see after
 - display output on STDOUT
 - verbose mode on STDERR if -v options.
+- defining environment with --environment, -e ENV (efault environement is :development)
+- debug mode on STDERR if -d options (cumulative with verbose).
 
-Note : CLI work only strict mode false, you could have unused keys in datas. 
+Note : the Thot CLI look for ~/.thot.env file or ./.thot.env file
+
+This file support INI format or flat format, keys in INI format are used for environment override
+
+
+
+Note : CLI work only strict mode false, you could have unused keys in datas and undefined value for tokens (substitute by ''). 
+
+Order for variable priorities :
+- ~/.thot.env
+- ./.thot.env
+- file passed by --env-var-file
+
 
 #### Pre-requisites
 
@@ -159,19 +202,19 @@ In the same path
 #### STDIN from echo
 
 ```
-    $ echo "Hello %%NAME%% !!" |thot -e env.test
+    $ echo "Hello %%NAME%% !!" |thot -f env.test
 ```
 
 #### STDIN from input
 
 ```
-    $ thot -e env.test < template.ttl
+    $ thot -f env.test < template.ttl
 ```
 
 #### Typical usage
 
 ```
-    $ thot -e env.test < template.ttl > output.txt
+    $ thot -f env.test < template.ttl > output.txt
 ```
 
 ###

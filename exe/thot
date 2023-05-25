@@ -29,7 +29,7 @@ begin
     opts.on("-d", "--[no-]debug", "Run on debug") do |d|
       options[:debug] = d
     end
-    opts.on("-f FILENAME", "--env-var-file=FILENAME", "[MANDATORY] Environment variables file (key=value pairs by line)") do |file|
+    opts.on("-f FILENAME", "--env-var-file=FILENAME", "Environment variables file (key=value pairs by line)") do |file|
       options[:env_var_file] = file
     end
     opts.on("-e ENVIRONMENT", "--environment=ENVIRONMENT", "Environment name") do |evt|
