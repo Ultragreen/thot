@@ -10,8 +10,8 @@ Thot is THe Operative Templating : the simpliest solution for Ruby and command t
 ![GitHub top language](https://img.shields.io/github/languages/top/Ultragreen/thot)
 ![GitHub milestones](https://img.shields.io/github/milestones/open/Ultragreen/thot)
 
-![Gem](https://img.shields.io/gem/dt/carioca)
-[![Gem Version](https://badge.fury.io/rb/sc4ry.svg)](https://badge.fury.io/rb/thot)
+![Gem](https://img.shields.io/gem/dt/thot)
+[![Gem Version](https://badge.fury.io/rb/thot.svg)](https://badge.fury.io/rb/thot)
 ![Twitter Follow](https://img.shields.io/twitter/follow/Ultragreen?style=social)
 ![GitHub Org's stars](https://img.shields.io/github/stars/Ultragreen?style=social)
 ![GitHub watchers](https://img.shields.io/github/watchers/Ultragreen/thot?style=social)
@@ -20,7 +20,7 @@ Thot is THe Operative Templating : the simpliest solution for Ruby and command t
 
 
 ![Thot logo](assets/images/logo_thot_full_large.png) 
-_The Operative Templating__
+_The Operative Templating_
 
 ## Installation
 
