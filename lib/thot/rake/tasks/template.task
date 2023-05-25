@@ -1,0 +1,13 @@
+namespace :thot do
+
+    desc "templatize file from ENV vars : THOT_VARFILE, THOT_TEMPLATE "
+    task :templatize do 
+
+        if ENV.include? 'THOT_VARFILE' and ENV.include? 'THOT_VARFILE'
+            system("thot -f #{ENV['THOT_VARFILE']} #{ENV['THOT_TEMPLATE']}")
+        else
+            puts 'Please precise THOT_VARFILE and THOT_TEMPLATE environment variables'
+        end
+    end
+
+end
