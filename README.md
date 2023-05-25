@@ -139,7 +139,7 @@ Note : CLI work only strict mode false, you could have unused keys in datas.
 
 #### Pre-requisites
 
-* a file 'template.txt' with : "Hello **%%NAME%%** !!"
+* a file 'template.ttl' with : "Hello **%%NAME%%** !!"
 * a variables file with lines, like :
 ```
     key=value
@@ -165,19 +165,13 @@ In the same path
 #### STDIN from input
 
 ```
-    $ thot -e env.test < template.txt
-```
-
-#### Files list 
-
-```
-    $ thot -e env.test template1.txt template2.txt
+    $ thot -e env.test < template.ttl
 ```
 
 #### Typical usage
 
 ```
-    $ thot -e env.test < template.txt > output.txt
+    $ thot -e env.test < template.ttl > output.txt
 ```
 
 ###

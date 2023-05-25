@@ -92,3 +92,25 @@ RSpec.describe Template do
     $test = nil
   end
 end
+
+
+RSpec.describe Varfiles do
+  before :all do
+    $varfile  = "./samples/.env.prod"
+    $dotfile = "./samples/.thot.env" 
+    $result = {"name"=>"romain", "surname"=>"georges", "var1"=>"local", "var2"=>"global"}
+  end
+  context "Structure" do
+    subject { Varfiles }
+    specify { should be_an_instance_of Class }
+  end
+  context "Runtime" do 
+    subject { Varfiles::new(varfile: $varfile, environment: :development, dotfiles: [$dotfile]) }
+    context "#data" do
+      specify {expect(subject.data).to be_an_instance_of Hash }
+      it "should respond with good content" do
+        expect( subject.data).to eq($result )
+      end
+    end
+  end
+end

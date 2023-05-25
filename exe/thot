@@ -1,18 +1,36 @@
 #!/usr/bin/env ruby
 
 
+require 'carioca'
+
+Carioca::Registry.configure do |spec|
+  spec.debug = false
+  spec.init_from_file = false
+  spec.output_mode = :mono
+#   spec.output_emoji = true
+#   spec.output_colors = true
+#   spec.output_target = STDERR
+ end
+
 require 'optparse'
 require 'thot'
 require 'thot/cli'
 
 options = {}
+options[:environment] = :development
 OptionParser.new do |opts|
   opts.banner = "Usage: thot [options]"
   opts.on("-v", "--[no-]verbose", "Run verbosely") do |v|
     options[:verbose] = v
   end
-  opts.on("-eFILENAME", "--env-var-file=FILENAME", "[MANDATORY] Environment variables file (key=value pairs by line)") do |file|
+  opts.on("-d", "--[no-]debug", "Run on debug") do |d|
+    options[:debug] = d
+  end
+  opts.on("-f FILENAME", "--env-var-file=FILENAME", "[MANDATORY] Environment variables file (key=value pairs by line)") do |file|
     options[:env_var_file] = file
+  end
+  opts.on("-e ENVIRONMENT", "--environment=ENVIRONMENT", "Environment name") do |evt|
+    options[:environment] = evt
   end
 end.parse!
 
@@ -22,7 +40,7 @@ ARGV.clear
 
 include Thot
 
-cli = CLI::new options: options,  list_templates_file: list_input
+cli = CLI::new options: options,  template_file: list_input.first
 cli.generate
 
 

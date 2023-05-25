@@ -1,18 +1,27 @@
-module Thot
-  class CLI
 
-    def initialize(options: , list_templates_file: nil )
-      @list_templates_file = list_templates_file
+
+
+module Thot
+  class CLI < Carioca::Container
+
+    inject service: :output
+
+    def initialize(options: , template_file: nil )
       @options = options
+      output.level = (@options[:debug])? :debug : :info
+      output.debug "Debugging mode activated" if @options[:debug]
+      @template_file = template_file
+      output.info "Assuming Environment : #{@options[:environment]}" if @options[:verbose]
       getting_data
       getting_content
+      
     end
 
 
     def generate
       template =  Template::new(list_token: @data.keys, template_content: @content, strict: false)
       template.map @data
-      STDERR.puts "Generating output" if @options[:verbose]
+      output.info "Generating output" if @options[:verbose]
       puts template.output
     end
 
@@ -20,43 +29,30 @@ module Thot
 
      def getting_data
        if @options[:env_var_file] then
-         STDERR.puts "Environment file given : #{@options[:env_var_file]}" if @options[:verbose]
-         @data = read_evt_file(@options[:env_var_file])
+        output.info "Environment file given : #{@options[:env_var_file]}" if @options[:verbose]
        else
-         raise "Environment variables file argument missing, (--env-var-file) "
+        output.info "Environment variables file argument missing, (--env-var-file) " if @options[:verbose]
        end
+       @data =  Varfiles::new(environment: @options[:environment], varfile: @options[:env_var_file]).data
      end
 
      def getting_content
         @content = ""
-       if @list_templates_file.empty?
-         STDERR.puts "Reading content from STDIN" if @options[:verbose]
+       if @template_file.nil?
+        output.info "Reading content from STDIN" if @options[:verbose]
          @content = ARGF.readlines.join
        else
-         STDERR.puts "Reading content from file(s) : #{@list_templates_file}" if @options[:verbose]
-         @list_templates_file.each do |item|
-           if File::exist? item
-             @content.concat(File::readlines(item).join)
-           else
-             raise "file not found #{item}"
-           end
-         end
+        output.info "Reading content from file : #{@template_file}" if @options[:verbose]
+        if File::exist? @template_file
+         @content = File::readlines(@template_file).join
+        else
+         raise "file not found #{item}"
+        end
        end
      end
 
      def read_evt_file(file)
-       res = {}
-       if File::exist? file
-         content =  File::readlines(file)
-       else
-         raise "Environment variables file not found #{file}"
-       end
-       content.each do |line|
-         next if line =~ /#/
-         key,value = line.split('=')
-         res[key.strip.to_sym] = value.strip if value
-       end
-       return res
+       return 
      end
 
   end
