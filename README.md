@@ -173,7 +173,7 @@ return
 
 ##### Synoptic
 
-![synoptic](assets/images/description_thot_template.png) 
+![synoptic](assets/images/description_thot_varfiles.png) 
 
 ##### Example 
 
