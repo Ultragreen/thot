@@ -48,6 +48,10 @@ It could generate an output.
 
 From versions upper than 1.2.0, Thot support token syntax like **{{TOKEN_NAME}}**
 
+### Global synoptic
+
+![synoptic](assets/images/description_thot.png) 
+
 ### Simple usecase
 
 - with data :  <pre>{name: 'Romain'}</pre>
@@ -106,9 +110,19 @@ Thot is a library for you usage AND a CLI tool.
 
 ###  Ruby Library usage
 
+
+#### Thot::Template
+
+
+##### Synoptic
+
+![synoptic](assets/images/description_thot_template.png) 
+
 you could use Thot in your Ruby code :
 
-#### Strict mode and accessor input
+##### Examples 
+
+###### Strict mode and accessor input
 
 Note : Considering 'template.txt' with : 'Hello **%%NAME%%** !!'
 Note : in strict mode if the Tokens in template file don't match exactly the given token list, Thot raise an exception.  
@@ -126,7 +140,7 @@ return
    Hello Romain !!
 
 
-#### Strict mode false with accesor input and template_content
+###### Strict mode false with accesor input and template_content
 
 ```ruby
    require 'thot'
@@ -140,7 +154,7 @@ return
 
     Hello Romain !!
 
-#### Strict mode false with map input and template_content
+###### Strict mode false with map input and template_content
 
 ```ruby
    require 'thot'
@@ -154,7 +168,116 @@ return
 
    Hello Romain !!
 
+#### Thot::Varfiles
 
+
+##### Synoptic
+
+![synoptic](assets/images/description_thot_template.png) 
+
+##### Example 
+
+###### File format
+
+**Note** : format support is the same for .thot.env files AND given files.
+
+Varfiles support both INI and flat format, like :
+
+for flat : 
+
+```
+    key=value
+    key = value
+      key = value
+    # comments and other lines are ignored
+```
+
+for INI :
+
+```
+    key=value
+    key = value
+      key = value
+    # comments and other lines are ignored
+
+    [EVT]
+    key=value
+    key = value
+      key = value
+    # comments and other lines are ignored
+```
+
+**Note** : section are overrides of global values
+
+###### Sample files for examples
+
+./.thot.env file :
+
+```
+    key=first value
+    key2=first value 
+```
+
+
+Given file : "/path/to/myfile.ini"
+
+```
+    key=value
+   
+    [development]
+    key=dev value
+
+    [staging]
+    key=staging value
+    
+```
+###### For :developement evt, without changing dotfiles preloaded.
+
+
+
+```ruby
+   require 'thot'
+   include Thot
+   vars = Varfiles::new varfile: "/path/to/myfile.ini"
+   pp vars.data  
+```
+
+output 
+
+   {key: "dev value", key2: "first value"}
+
+###### For :staging evt, without changing dotfiles preloaded.
+
+
+
+```ruby
+   require 'thot'
+   include Thot
+   vars = Varfiles::new varfile: "/path/to/myfile.ini", environment: :staging
+   pp vars.data  
+```
+
+output 
+
+   {key: "staging value", key2: "first value"}
+
+
+###### For :staging evt, changing dotfiles.
+
+**Note** : default dotfiles priority is : ["~/.thot.env","./.thot.env"]
+
+
+
+```ruby
+   require 'thot'
+   include Thot
+   vars = Varfiles::new varfile: "/path/to/myfile.ini", environment: :staging, dotfiles: []
+   pp vars.data  
+```
+
+output 
+
+   {key: "staging value"}
 
 ###   CLI usage
 
