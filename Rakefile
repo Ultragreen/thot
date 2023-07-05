@@ -32,3 +32,18 @@ namespace :yardoc do
     end
 end
 task :clobber => "yardoc:clobber"
+
+desc "Run CVE security audit over bundle"
+task :audit do
+  system('bundle audit')
+end
+
+desc "Run dead line of code detection"
+task :debride do
+  system('debride -w .debride_whitelist .')
+end
+
+desc "Run SBOM CycloneDX Xml format file"
+task :sbom do
+  system('cyclonedx-ruby -p .')
+end

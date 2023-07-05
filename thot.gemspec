@@ -33,4 +33,9 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "yard", "~> 0.9.27"
   spec.add_development_dependency "yard-rspec", "~> 0.1"
   spec.add_development_dependency'version', '~> 1.1'
+
+  spec.add_development_dependency "bundle-audit", "~> 0.1.0"
+
+  spec.add_development_dependency "cyclonedx-ruby", "~> 1.1"
+  spec.add_development_dependency "debride", "~> 1.12"
 end
