@@ -22,12 +22,12 @@ Gem::Specification.new do |spec|
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
 
-  spec.add_dependency "carioca", "~> 2.0"
+  spec.add_dependency "carioca", "~> 2.1"
   spec.add_dependency "inifile", "~> 3.0"
 
-  spec.add_development_dependency 'rake', '~> 12.0'
+  spec.add_development_dependency 'rake', '~> 13.0'
   spec.add_development_dependency 'rspec', '~> 3.0'
-  spec.add_development_dependency 'rubocop', '~> 1.32'
+  spec.add_development_dependency 'rubocop', '~> 1.54'
   spec.add_development_dependency "roodi", "~> 5.0"
   spec.add_development_dependency 'code_statistics', '~> 0.2.13'
   spec.add_development_dependency "yard", "~> 0.9.27"
