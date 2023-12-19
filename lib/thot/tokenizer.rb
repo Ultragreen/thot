@@ -12,28 +12,30 @@ module Thot
         end
     
         def detect
-            detected = @string.scan(/%%[^\%]*%%/).concat @string.scan(/\{\{[^\}]*\}\}/)
-            detected.each  do |token|
-                key,*rest = token[2,(token.length - 4)].split('.')
-                filters = []; default = nil
-                if key =~ /(.*)\((.*)\)/ then
-                    key = $1
-                    default = $2
+            if @string.valid_encoding?
+                detected = @string.force_encoding("UTF-8").scan(/%%[^\%]*%%/).concat @string.force_encoding("UTF-8").scan(/\{\{[^\}]*\}\}/)
+                detected.each  do |token|
+                    key,*rest = token[2,(token.length - 4)].split('.')
+                    filters = []; default = nil
+                    if key =~ /(.*)\((.*)\)/ then
+                        key = $1
+                        default = $2
+                    end
+                    rest.each {|item|
+                        if item =~ /(.*)\((.*)\)/ then 
+                            filters.push $1  
+                                default = $2 
+        
+                        else
+                            filters.push item
+                        end
+                        }
+                    @tokens.push key unless @tokens.include? key
+                    @definitions[token] = {key: key, filters: filters , default: default }
                 end
-                rest.each {|item|
-                     if item =~ /(.*)\((.*)\)/ then 
-                        filters.push $1  
-                            default = $2 
-    
-                    else
-                        filters.push item
-                     end
-                    }
-                @tokens.push key unless @tokens.include? key
-                @definitions[token] = {key: key, filters: filters , default: default }
+                @tokens.map!(&:downcase)
+                @tokens.map!(&:to_sym)
             end
-            @tokens.map!(&:downcase)
-            @tokens.map!(&:to_sym)
         end
     end
 end
