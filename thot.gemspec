@@ -38,4 +38,5 @@ Gem::Specification.new do |spec|
 
   spec.add_development_dependency "cyclonedx-ruby", "~> 1.1"
   spec.add_development_dependency "debride", "~> 1.12"
+  
 end
